@@ -1,30 +1,30 @@
 import React, { useState, useMemo } from 'react';
 import { 
   Search, Filter, SlidersHorizontal, Eye, EyeOff, Check, ArrowRightLeft, 
-  Bike, Tag, Layers, ShieldCheck, ShoppingBag, X, CheckCircle, Sparkles, ChevronRight, MapPin
+  Bike, Tag, Layers, ShieldCheck, ShoppingBag, X, CheckCircle, Sparkles, ChevronRight, MapPin, Wrench
 } from 'lucide-react';
 
 const PRODUCTS = [
-  { id: 1, name: "VeloCity E-Urban 500", kategorie: "E-Bike", marke: "VeloCity", preis_eur: 2899, ek_preis: 1850, marge_prozent: 36, groesse: "M", material: "Aluminium", einsatzbereich: "City", rahmenform: "Tiefeinsteiger", schaltung: "Shimano Nexus 8-Gang", farbe: "Mattschwarz", auf_lager: true, filialen: { "Stuttgart": 2, "Fellbach": 1, "CUBE Store Untertürkheim": 0 }, zubehoer: ["Schutzbleche", "Gepäckträger", "Beleuchtung"], bild: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80" },
-  { id: 2, name: "VeloCity E-Urban 500", kategorie: "E-Bike", marke: "VeloCity", preis_eur: 2899, ek_preis: 1850, marge_prozent: 36, groesse: "L", material: "Aluminium", einsatzbereich: "City", rahmenform: "Tiefeinsteiger", schaltung: "Shimano Nexus 8-Gang", farbe: "Mattschwarz", auf_lager: false, filialen: { "Stuttgart": 0, "Fellbach": 0, "CUBE Store Untertürkheim": 0 }, zubehoer: ["Schutzbleche", "Gepäckträger", "Beleuchtung"], bild: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80" },
-  { id: 3, name: "VeloCity E-Urban 500", kategorie: "E-Bike", marke: "VeloCity", preis_eur: 2899, ek_preis: 1850, marge_prozent: 36, groesse: "S", material: "Aluminium", einsatzbereich: "City", rahmenform: "Tiefeinsteiger", schaltung: "Shimano Nexus 8-Gang", farbe: "Sonnengelb", auf_lager: true, filialen: { "Stuttgart": 0, "Fellbach": 1, "CUBE Store Untertürkheim": 0 }, zubehoer: ["Schutzbleche", "Gepäckträger", "Beleuchtung"], bild: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80" },
-  { id: 4, name: "TrailHawk Enduro Pro", kategorie: "MTB", marke: "TrailHawk", preis_eur: 4499, ek_preis: 2900, marge_prozent: 35, groesse: "L", material: "Carbon", einsatzbereich: "Trail / Enduro", rahmenform: "Diamant", schaltung: "SRAM GX Eagle 12-Gang", farbe: "Steingrau", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 0, "CUBE Store Untertürkheim": 2 }, zubehoer: ["Kettenführung"], bild: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=800&q=80" },
-  { id: 5, name: "TrailHawk Enduro Pro", kategorie: "MTB", marke: "TrailHawk", preis_eur: 4499, ek_preis: 2900, marge_prozent: 35, groesse: "XL", material: "Carbon", einsatzbereich: "Trail / Enduro", rahmenform: "Diamant", schaltung: "SRAM GX Eagle 12-Gang", farbe: "Steingrau", auf_lager: true, filialen: { "Stuttgart": 0, "Fellbach": 0, "CUBE Store Untertürkheim": 1 }, zubehoer: ["Kettenführung"], bild: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=800&q=80" },
-  { id: 6, name: "TrailHawk Enduro Comp", kategorie: "MTB", marke: "TrailHawk", preis_eur: 3199, ek_preis: 2100, marge_prozent: 34, groesse: "M", material: "Aluminium", einsatzbereich: "Trail / Enduro", rahmenform: "Diamant", schaltung: "Shimano Deore 12-Gang", farbe: "Signalrot", auf_lager: true, filialen: { "Stuttgart": 2, "Fellbach": 2, "CUBE Store Untertürkheim": 0 }, zubehoer: ["Kettenführung"], bild: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=800&q=80" },
-  { id: 7, name: "RacerX Aero Carbon", kategorie: "Rennrad", marke: "RacerX", preis_eur: 3899, ek_preis: 2500, marge_prozent: 36, groesse: "54 cm", material: "Carbon", einsatzbereich: "Straße", rahmenform: "Diamant", schaltung: "Shimano 105 Di2", farbe: "Glossy Black", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 1, "CUBE Store Untertürkheim": 0 }, zubehoer: [], bild: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80" },
-  { id: 8, name: "RacerX Aero Carbon", kategorie: "Rennrad", marke: "RacerX", preis_eur: 3899, ek_preis: 2500, marge_prozent: 36, groesse: "56 cm", material: "Carbon", einsatzbereich: "Straße", rahmenform: "Diamant", schaltung: "Shimano 105 Di2", farbe: "Glossy Black", auf_lager: true, filialen: { "Stuttgart": 0, "Fellbach": 0, "CUBE Store Untertürkheim": 1 }, zubehoer: [], bild: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80" },
-  { id: 10, name: "GravelKing Endurance 7", kategorie: "Gravelbike", marke: "GravelKing", preis_eur: 2199, ek_preis: 1400, marge_prozent: 36, groesse: "S", material: "Aluminium", einsatzbereich: "Gravel / Allroad", rahmenform: "Trapez", schaltung: "Shimano GRX 400", farbe: "Moosgrün", auf_lager: true, filialen: { "Stuttgart": 2, "Fellbach": 1, "CUBE Store Untertürkheim": 2 }, zubehoer: [], bild: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=800&q=80" },
-  { id: 11, name: "GravelKing Endurance 7", kategorie: "Gravelbike", marke: "GravelKing", preis_eur: 2199, ek_preis: 1400, marge_prozent: 36, groesse: "M", material: "Aluminium", einsatzbereich: "Gravel / Allroad", rahmenform: "Trapez", schaltung: "Shimano GRX 400", farbe: "Moosgrün", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 2, "CUBE Store Untertürkheim": 0 }, zubehoer: [], bild: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=800&q=80" },
-  { id: 12, name: "GravelKing Endurance 7", kategorie: "Gravelbike", marke: "GravelKing", preis_eur: 2199, ek_preis: 1400, marge_prozent: 36, groesse: "L", material: "Aluminium", einsatzbereich: "Gravel / Allroad", rahmenform: "Diamant", schaltung: "Shimano GRX 400", farbe: "Moosgrün", auf_lager: true, filialen: { "Stuttgart": 0, "Fellbach": 1, "CUBE Store Untertürkheim": 1 }, zubehoer: [], bild: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=800&q=80" },
-  { id: 13, name: "GravelKing Carbon Pro", kategorie: "Gravelbike", marke: "GravelKing", preis_eur: 3499, ek_preis: 2200, marge_prozent: 37, groesse: "M", material: "Carbon", einsatzbereich: "Gravel / Allroad", rahmenform: "Diamant", schaltung: "SRAM Rival eTap", farbe: "Sandbeige", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 0, "CUBE Store Untertürkheim": 0 }, zubehoer: ["Tubeless-Kit"], bild: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=800&q=80" },
-  { id: 14, name: "NordicRide Trekking Master", kategorie: "Trekking", marke: "NordicRide", preis_eur: 1299, ek_preis: 820, marge_prozent: 36, groesse: "M", material: "Aluminium", einsatzbereich: "Trekking / Tour", rahmenform: "Trapez", schaltung: "Shimano XT 30-Gang", farbe: "Dunkelblau", auf_lager: true, filialen: { "Stuttgart": 3, "Fellbach": 2, "CUBE Store Untertürkheim": 1 }, zubehoer: ["Gepäckträger", "Seitenständer", "Beleuchtung"], bild: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80" },
-  { id: 15, name: "NordicRide Trekking Master", kategorie: "Trekking", marke: "NordicRide", preis_eur: 1299, ek_preis: 820, marge_prozent: 36, groesse: "L", material: "Aluminium", einsatzbereich: "Trekking / Tour", rahmenform: "Diamant", schaltung: "Shimano XT 30-Gang", farbe: "Dunkelblau", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 1, "CUBE Store Untertürkheim": 2 }, zubehoer: ["Gepäckträger", "Seitenständer", "Beleuchtung"], bild: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80" },
-  { id: 22, name: "VeloCity E-Mountain 900", kategorie: "E-MTB", marke: "VeloCity", preis_eur: 5299, ek_preis: 3400, marge_prozent: 35, groesse: "M", material: "Carbon", einsatzbereich: "Trail / Enduro", rahmenform: "Diamant", schaltung: "SRAM X01 Eagle", farbe: "Kupfer/Schwarz", auf_lager: true, filialen: { "Stuttgart": 0, "Fellbach": 0, "CUBE Store Untertürkheim": 2 }, zubehoer: ["Kettenführung"], bild: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=800&q=80" },
-  { id: 26, name: "CargoX Family E-Load", kategorie: "Lastenrad", marke: "CargoX", preis_eur: 4999, ek_preis: 3300, marge_prozent: 34, groesse: "One Size", material: "Aluminium", einsatzbereich: "Familie / Transport", rahmenform: "Tiefeinsteiger", schaltung: "Enviolo Stufenlos", farbe: "Mattschwarz", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 0, "CUBE Store Untertürkheim": 0 }, zubehoer: ["Kinderbank", "Regendach", "Gurt-System"], bild: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80" },
-  { id: 36, name: "Helm SafetyPro MIPS", kategorie: "Zubehör", marke: "SafeRide", preis_eur: 129, ek_preis: 65, marge_prozent: 49, groesse: "M", material: "Kunststoff", einsatzbereich: "Zubehör", rahmenform: "N/A", schaltung: "N/A", farbe: "Mattschwarz", auf_lager: true, filialen: { "Stuttgart": 5, "Fellbach": 4, "CUBE Store Untertürkheim": 3 }, zubehoer: ["LED-Rücklicht"], bild: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80" }
+  { id: 1, name: "VeloCity E-Urban 500", kategorie: "E-Bike", marke: "VeloCity", preis_eur: 2899, ek_preis: 1850, marge_prozent: 36, groesse: "M", material: "Aluminium", einsatzbereich: "City", rahmenform: "Tiefeinsteiger", schaltung: "Shimano Nexus 8-Gang", farbe: "Mattschwarz", auf_lager: true, filialen: { "Stuttgart": 2, "Fellbach": 1, "CUBE Store Untertürkheim": 0, "Zentrallager": 5 }, zubehoer: ["Schutzbleche", "Gepäckträger", "Beleuchtung"], bild: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80" },
+  { id: 2, name: "VeloCity E-Urban 500", kategorie: "E-Bike", marke: "VeloCity", preis_eur: 2899, ek_preis: 1850, marge_prozent: 36, groesse: "L", material: "Aluminium", einsatzbereich: "City", rahmenform: "Tiefeinsteiger", schaltung: "Shimano Nexus 8-Gang", farbe: "Mattschwarz", auf_lager: false, filialen: { "Stuttgart": 0, "Fellbach": 0, "CUBE Store Untertürkheim": 0, "Zentrallager": 0 }, zubehoer: ["Schutzbleche", "Gepäckträger", "Beleuchtung"], bild: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80" },
+  { id: 3, name: "VeloCity E-Urban 500", kategorie: "E-Bike", marke: "VeloCity", preis_eur: 2899, ek_preis: 1850, marge_prozent: 36, groesse: "S", material: "Aluminium", einsatzbereich: "City", rahmenform: "Tiefeinsteiger", schaltung: "Shimano Nexus 8-Gang", farbe: "Sonnengelb", auf_lager: true, filialen: { "Stuttgart": 0, "Fellbach": 1, "CUBE Store Untertürkheim": 0, "Zentrallager": 2 }, zubehoer: ["Schutzbleche", "Gepäckträger", "Beleuchtung"], bild: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80" },
+  { id: 4, name: "TrailHawk Enduro Pro", kategorie: "MTB", marke: "TrailHawk", preis_eur: 4499, ek_preis: 2900, marge_prozent: 35, groesse: "L", material: "Carbon", einsatzbereich: "Trail / Enduro", rahmenform: "Diamant", schaltung: "SRAM GX Eagle 12-Gang", farbe: "Steingrau", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 0, "CUBE Store Untertürkheim": 2, "Zentrallager": 1 }, zubehoer: ["Kettenführung"], bild: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=800&q=80" },
+  { id: 5, name: "TrailHawk Enduro Pro", kategorie: "MTB", marke: "TrailHawk", preis_eur: 4499, ek_preis: 2900, marge_prozent: 35, groesse: "XL", material: "Carbon", einsatzbereich: "Trail / Enduro", rahmenform: "Diamant", schaltung: "SRAM GX Eagle 12-Gang", farbe: "Steingrau", auf_lager: true, filialen: { "Stuttgart": 0, "Fellbach": 0, "CUBE Store Untertürkheim": 0, "Zentrallager": 3 }, zubehoer: ["Kettenführung"], bild: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=800&q=80" },
+  { id: 6, name: "TrailHawk Enduro Comp", kategorie: "MTB", marke: "TrailHawk", preis_eur: 3199, ek_preis: 2100, marge_prozent: 34, groesse: "M", material: "Aluminium", einsatzbereich: "Trail / Enduro", rahmenform: "Diamant", schaltung: "Shimano Deore 12-Gang", farbe: "Signalrot", auf_lager: true, filialen: { "Stuttgart": 2, "Fellbach": 2, "CUBE Store Untertürkheim": 0, "Zentrallager": 4 }, zubehoer: ["Kettenführung"], bild: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=800&q=80" },
+  { id: 7, name: "RacerX Aero Carbon", kategorie: "Rennrad", marke: "RacerX", preis_eur: 3899, ek_preis: 2500, marge_prozent: 36, groesse: "54 cm", material: "Carbon", einsatzbereich: "Straße", rahmenform: "Diamant", schaltung: "Shimano 105 Di2", farbe: "Glossy Black", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 1, "CUBE Store Untertürkheim": 0, "Zentrallager": 0 }, zubehoer: [], bild: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80" },
+  { id: 8, name: "RacerX Aero Carbon", kategorie: "Rennrad", marke: "RacerX", preis_eur: 3899, ek_preis: 2500, marge_prozent: 36, groesse: "56 cm", material: "Carbon", einsatzbereich: "Straße", rahmenform: "Diamant", schaltung: "Shimano 105 Di2", farbe: "Glossy Black", auf_lager: true, filialen: { "Stuttgart": 0, "Fellbach": 0, "CUBE Store Untertürkheim": 1, "Zentrallager": 2 }, zubehoer: [], bild: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80" },
+  { id: 10, name: "GravelKing Endurance 7", kategorie: "Gravelbike", marke: "GravelKing", preis_eur: 2199, ek_preis: 1400, marge_prozent: 36, groesse: "S", material: "Aluminium", einsatzbereich: "Gravel / Allroad", rahmenform: "Trapez", schaltung: "Shimano GRX 400", farbe: "Moosgrün", auf_lager: true, filialen: { "Stuttgart": 2, "Fellbach": 1, "CUBE Store Untertürkheim": 2, "Zentrallager": 6 }, zubehoer: [], bild: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=800&q=80" },
+  { id: 11, name: "GravelKing Endurance 7", kategorie: "Gravelbike", marke: "GravelKing", preis_eur: 2199, ek_preis: 1400, marge_prozent: 36, groesse: "M", material: "Aluminium", einsatzbereich: "Gravel / Allroad", rahmenform: "Trapez", schaltung: "Shimano GRX 400", farbe: "Moosgrün", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 2, "CUBE Store Untertürkheim": 0, "Zentrallager": 3 }, zubehoer: [], bild: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=800&q=80" },
+  { id: 12, name: "GravelKing Endurance 7", kategorie: "Gravelbike", marke: "GravelKing", preis_eur: 2199, ek_preis: 1400, marge_prozent: 36, groesse: "L", material: "Aluminium", einsatzbereich: "Gravel / Allroad", rahmenform: "Diamant", schaltung: "Shimano GRX 400", farbe: "Moosgrün", auf_lager: true, filialen: { "Stuttgart": 0, "Fellbach": 1, "CUBE Store Untertürkheim": 1, "Zentrallager": 1 }, zubehoer: [], bild: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=800&q=80" },
+  { id: 13, name: "GravelKing Carbon Pro", kategorie: "Gravelbike", marke: "GravelKing", preis_eur: 3499, ek_preis: 2200, marge_prozent: 37, groesse: "M", material: "Carbon", einsatzbereich: "Gravel / Allroad", rahmenform: "Diamant", schaltung: "SRAM Rival eTap", farbe: "Sandbeige", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 0, "CUBE Store Untertürkheim": 0, "Zentrallager": 2 }, zubehoer: ["Tubeless-Kit"], bild: "https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=800&q=80" },
+  { id: 14, name: "NordicRide Trekking Master", kategorie: "Trekking", marke: "NordicRide", preis_eur: 1299, ek_preis: 820, marge_prozent: 36, groesse: "M", material: "Aluminium", einsatzbereich: "Trekking / Tour", rahmenform: "Trapez", schaltung: "Shimano XT 30-Gang", farbe: "Dunkelblau", auf_lager: true, filialen: { "Stuttgart": 3, "Fellbach": 2, "CUBE Store Untertürkheim": 1, "Zentrallager": 10 }, zubehoer: ["Gepäckträger", "Seitenständer", "Beleuchtung"], bild: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80" },
+  { id: 15, name: "NordicRide Trekking Master", kategorie: "Trekking", marke: "NordicRide", preis_eur: 1299, ek_preis: 820, marge_prozent: 36, groesse: "L", material: "Aluminium", einsatzbereich: "Trekking / Tour", rahmenform: "Diamant", schaltung: "Shimano XT 30-Gang", farbe: "Dunkelblau", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 1, "CUBE Store Untertürkheim": 2, "Zentrallager": 5 }, zubehoer: ["Gepäckträger", "Seitenständer", "Beleuchtung"], bild: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80" },
+  { id: 22, name: "VeloCity E-Mountain 900", kategorie: "E-MTB", marke: "VeloCity", preis_eur: 5299, ek_preis: 3400, marge_prozent: 35, groesse: "M", material: "Carbon", einsatzbereich: "Trail / Enduro", rahmenform: "Diamant", schaltung: "SRAM X01 Eagle", farbe: "Kupfer/Schwarz", auf_lager: true, filialen: { "Stuttgart": 0, "Fellbach": 0, "CUBE Store Untertürkheim": 2, "Zentrallager": 1 }, zubehoer: ["Kettenführung"], bild: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=800&q=80" },
+  { id: 26, name: "CargoX Family E-Load", kategorie: "Lastenrad", marke: "CargoX", preis_eur: 4999, ek_preis: 3300, marge_prozent: 34, groesse: "One Size", material: "Aluminium", einsatzbereich: "Familie / Transport", rahmenform: "Tiefeinsteiger", schaltung: "Enviolo Stufenlos", farbe: "Mattschwarz", auf_lager: true, filialen: { "Stuttgart": 1, "Fellbach": 0, "CUBE Store Untertürkheim": 0, "Zentrallager": 2 }, zubehoer: ["Kinderbank", "Regendach", "Gurt-System"], bild: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80" },
+  { id: 36, name: "Helm SafetyPro MIPS", kategorie: "Zubehör", marke: "SafeRide", preis_eur: 129, ek_preis: 65, marge_prozent: 49, groesse: "M", material: "Kunststoff", einsatzbereich: "Zubehör", rahmenform: "N/A", schaltung: "N/A", farbe: "Mattschwarz", auf_lager: true, filialen: { "Stuttgart": 5, "Fellbach": 4, "CUBE Store Untertürkheim": 3, "Zentrallager": 20 }, zubehoer: ["LED-Rücklicht"], bild: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80" }
 ];
 
-const FILIALEN = ["Alle Filialen", "Stuttgart", "Fellbach", "CUBE Store Untertürkheim"];
+const FILIALEN = ["Alle Standorte", "Stuttgart", "Fellbach", "CUBE Store Untertürkheim", "Zentrallager"];
 
 export default function App() {
   const [search, setSearch] = useState('');
@@ -32,7 +32,7 @@ export default function App() {
   const [selectedMarke, setSelectedMarke] = useState('Alle');
   const [selectedGroesse, setSelectedGroesse] = useState('Alle');
   const [selectedMaterial, setSelectedMaterial] = useState('Alle');
-  const [selectedFiliale, setSelectedFiliale] = useState('Alle Filialen');
+  const [selectedFiliale, setSelectedFiliale] = useState('Alle Standorte');
   const [onlyInStock, setOnlyInStock] = useState(false);
   const [maxPreis, setMaxPreis] = useState(6000);
   const [kundenModus, setKundenModus] = useState(true);
@@ -55,7 +55,7 @@ export default function App() {
       const matchPreis = p.preis_eur <= maxPreis;
       
       // Filial-Logik
-      const matchFiliale = selectedFiliale === 'Alle Filialen' || (p.filialen[selectedFiliale] && p.filialen[selectedFiliale] > 0);
+      const matchFiliale = selectedFiliale === 'Alle Standorte' || (p.filialen[selectedFiliale] && p.filialen[selectedFiliale] > 0);
       
       // Gesamtbestand prüfen
       const gesamtBestand = Object.values(p.filialen).reduce((a, b) => a + b, 0);
@@ -128,7 +128,7 @@ export default function App() {
                 setSelectedMarke('Alle');
                 setSelectedGroesse('Alle');
                 setSelectedMaterial('Alle');
-                setSelectedFiliale('Alle Filialen');
+                setSelectedFiliale('Alle Standorte');
                 setOnlyInStock(false);
                 setMaxPreis(6000);
                 setSearch('');
@@ -143,7 +143,7 @@ export default function App() {
             {/* FILIAL FILTER */}
             <div className="bg-emerald-950/30 p-3 rounded-2xl border border-emerald-500/20 space-y-2">
               <label className="text-xs font-bold uppercase text-emerald-400 tracking-wider flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5" /> Standortsuswahl
+                <MapPin className="w-3.5 h-3.5" /> Standortauswahl
               </label>
               <select value={selectedFiliale} onChange={e => setSelectedFiliale(e.target.value)} className="w-full p-2.5 bg-slate-900 border border-emerald-500/30 rounded-xl text-sm text-emerald-300 font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
                 {FILIALEN.map(f => <option key={f} value={f} className="bg-slate-900 text-slate-200">{f}</option>)}
@@ -266,7 +266,7 @@ export default function App() {
                             ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
                             : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                         }`}>
-                          {gesamtBestand > 0 ? `Lagernd (${gesamtBestand})` : 'Bestellbar'}
+                          {gesamtBestand > 0 ? `Verfügbar (${gesamtBestand})` : 'Nachbestellung'}
                         </span>
                       </div>
                       <h3 className="font-bold text-slate-100 text-lg leading-snug">{p.name}</h3>
@@ -280,13 +280,18 @@ export default function App() {
 
                     {/* FILIAL-VERFÜGBARKEIT */}
                     <div className="space-y-1 bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/40 text-[11px]">
-                      <div className="text-slate-500 font-medium mb-1 flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-emerald-400" /> Standorte:
+                      <div className="text-slate-500 font-medium mb-1 flex items-center justify-between">
+                        <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-emerald-400" /> Bestände:</span>
                       </div>
                       {Object.entries(p.filialen).map(([filiale, anz]) => (
                         <div key={filiale} className="flex justify-between items-center">
-                          <span className={anz > 0 ? "text-slate-300 font-medium" : "text-slate-600"}>{filiale}</span>
-                          <span className={anz > 0 ? "text-emerald-400 font-bold" : "text-slate-600"}>{anz > 0 ? `${anz} Stk.` : '—'}</span>
+                          <span className={anz > 0 ? (filiale === "Zentrallager" ? "text-amber-400 font-medium flex items-center gap-1" : "text-slate-300 font-medium") : "text-slate-600"}>
+                            {filiale === "Zentrallager" && anz > 0 && <Wrench className="w-3 h-3 text-amber-400 inline" />}
+                            {filiale}
+                          </span>
+                          <span className={anz > 0 ? (filiale === "Zentrallager" ? "text-amber-400 font-bold" : "text-emerald-400 font-bold") : "text-slate-600"}>
+                            {anz > 0 ? `${anz} Stk.` : '—'}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -355,20 +360,30 @@ export default function App() {
               </div>
             </div>
 
-            {/* FILIAL DETAIL ANZEIGE */}
-            <div className="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-2">
+            {/* FILIAL DETAIL ANZEIGE INKL. ZENTRALLAGER HINWEIS */}
+            <div className="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-3">
               <h4 className="font-bold text-xs uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-emerald-400" /> Verfügbarkeit nach Filiale
+                <MapPin className="w-3.5 h-3.5 text-emerald-400" /> Standorte & Bestände
               </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                {Object.entries(activeModalProduct.filialen).map(([filiale, anz]) => (
-                  <div key={filiale} className={`p-3 rounded-xl border text-center ${
-                    anz > 0 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-600'
-                  }`}>
-                    <div className="text-xs font-medium truncate">{filiale}</div>
-                    <div className="text-lg font-black mt-1">{anz > 0 ? `${anz} Stk.` : 'Nicht auf Lager'}</div>
-                  </div>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {Object.entries(activeModalProduct.filialen).map(([filiale, anz]) => {
+                  const isZentral = filiale === "Zentrallager";
+                  return (
+                    <div key={filiale} className={`p-3 rounded-xl border text-center flex flex-col justify-between ${
+                      anz > 0 
+                        ? (isZentral ? 'bg-amber-500/10 border-amber-500/30 text-amber-300' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300')
+                        : 'bg-slate-900 border-slate-800 text-slate-600'
+                    }`}>
+                      <div className="text-[11px] font-medium leading-tight truncate">{filiale}</div>
+                      <div className="text-base font-black mt-1">{anz > 0 ? `${anz} Stk.` : '—'}</div>
+                      {isZentral && anz > 0 && (
+                        <div className="text-[9px] font-bold text-amber-400 mt-1 flex items-center justify-center gap-0.5">
+                          <Wrench className="w-2.5 h-2.5 inline" /> Aufbau nöt.
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
