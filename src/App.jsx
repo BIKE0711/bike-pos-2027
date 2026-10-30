@@ -59,31 +59,45 @@ export default function App() {
       setCompareList(compareList.filter(item => item.id !== p.id));
     } else {
       if (compareList.length < 3) setCompareList([...compareList, p]);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-slate-100 text-slate-800 flex flex-col font-sans">
-      <header className="bg-slate-900 text-white p-4 shadow-lg flex flex-wrap justify-between items-center gap-4 sticky top-0 z-30">
-        <div className="flex items-center space-x-3">
-          <div className="bg-emerald-500 p-2 rounded-xl text-slate-900">
-            <Bike className="w-6 h-6" />
+   {/* HEADER WITH ORIGINAL BIKE AND STYLE LOGO */}
+      <header className="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-40 flex flex-wrap justify-between items-center gap-4">
+        <div className="flex items-center space-x-4">
+          {/* LOGO ICON */}
+          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg shadow-white/5 shrink-0">
+            <svg viewBox="0 0 100 100" className="w-7 h-7 fill-slate-950">
+              <circle cx="50" cy="50" r="48" fill="#000000" />
+              <path d="M28 35 C 28 32, 72 32, 72 35 C 72 38, 60 37, 53 38 L 53 68 C 53 71, 47 71, 47 68 L 47 38 C 40 37, 28 38, 28 35 Z" fill="#ffffff" />
+            </svg>
           </div>
+
+          {/* BRAND NAME */}
           <div>
-            <h1 className="text-xl font-bold tracking-tight">VELO-POS Pro</h1>
-            <p className="text-xs text-slate-400">Verkäufer-Beratungssystem</p>
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-black tracking-[0.2em] text-white uppercase font-sans">
+                BIKE AND STYLE
+              </span>
+              <span className="text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 tracking-normal">
+                POS
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 tracking-wide">Verkäufer-Beratungsmodul</p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3">
           <button 
             onClick={() => setKundenModus(!kundenModus)}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium text-xs transition shadow-sm ${
               kundenModus 
-                ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
-                : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20' 
+                : 'bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20'
             }`}
           >
+            {kundenModus ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+            <span>{kundenModus ? 'Kundenmodus (Preise)' : 'Händlermodus (EK & Marge)'}</span>
+          </button>
+        </div>
+      </header>
             {kundenModus ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
             <span>{kundenModus ? 'Kundenmodus (Aktiv)' : 'Händlermodus (EK/Marge sichtbar)'}</span>
           </button>
