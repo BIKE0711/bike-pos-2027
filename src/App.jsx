@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { 
   Search, Filter, SlidersHorizontal, Eye, EyeOff, Check, ArrowRightLeft, 
-  Bike, Tag, Layers, ShieldCheck, ShoppingBag, X, CheckCircle, AlertCircle
+  Bike, Tag, Layers, ShieldCheck, ShoppingBag, X, CheckCircle, Sparkles, ChevronRight
 } from 'lucide-react';
 
 const PRODUCTS = [
@@ -35,6 +35,7 @@ export default function App() {
   const [kundenModus, setKundenModus] = useState(true);
   const [compareList, setCompareList] = useState([]);
   const [activeModalProduct, setActiveModalProduct] = useState(null);
+  const [showCompareModal, setShowCompareModal] = useState(false);
 
   const kategorien = ['Alle', ...new Set(PRODUCTS.map(p => p.kategorie))];
   const marken = ['Alle', ...new Set(PRODUCTS.map(p => p.marke))];
@@ -59,7 +60,13 @@ export default function App() {
       setCompareList(compareList.filter(item => item.id !== p.id));
     } else {
       if (compareList.length < 3) setCompareList([...compareList, p]);
-   {/* HEADER WITH ORIGINAL BIKE AND STYLE LOGO */}
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-950">
+      
+      {/* HEADER WITH ORIGINAL BIKE AND STYLE LOGO */}
       <header className="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-40 flex flex-wrap justify-between items-center gap-4">
         <div className="flex items-center space-x-4">
           {/* LOGO ICON */}
@@ -98,17 +105,14 @@ export default function App() {
           </button>
         </div>
       </header>
-            {kundenModus ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-            <span>{kundenModus ? 'Kundenmodus (Aktiv)' : 'Händlermodus (EK/Marge sichtbar)'}</span>
-          </button>
-        </div>
-      </header>
 
       <div className="flex-1 flex flex-col md:flex-row">
-        <aside className="w-full md:w-80 bg-white border-r border-slate-200 p-5 space-y-6 shrink-0">
-          <div className="flex items-center justify-between border-b pb-3">
-            <h2 className="font-bold text-slate-700 flex items-center gap-2">
-              <SlidersHorizontal className="w-4 h-4" /> Filter
+        
+        {/* SIDEBAR FILTER */}
+        <aside className="w-full md:w-80 bg-slate-900/50 border-r border-slate-800/80 p-6 space-y-6 shrink-0">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+            <h2 className="font-bold text-slate-200 flex items-center gap-2 text-sm uppercase tracking-wider">
+              <SlidersHorizontal className="w-4 h-4 text-emerald-400" /> Filter & Suche
             </h2>
             <button 
               onClick={() => {
@@ -120,31 +124,31 @@ export default function App() {
                 setMaxPreis(6000);
                 setSearch('');
               }}
-              className="text-xs text-emerald-600 hover:underline font-medium"
+              className="text-xs text-slate-400 hover:text-emerald-400 transition"
             >
-              Zurücksetzen
+              Reset
             </button>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div>
               <label className="text-xs font-semibold uppercase text-slate-400 tracking-wider">Kategorie</label>
-              <select value={selectedKategorie} onChange={e => setSelectedKategorie(e.target.value)} className="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm">
-                {kategorien.map(k => <option key={k} value={k}>{k}</option>)}
+              <select value={selectedKategorie} onChange={e => setSelectedKategorie(e.target.value)} className="w-full mt-1.5 p-2.5 bg-slate-800/80 border border-slate-700/60 rounded-xl text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                {kategorien.map(k => <option key={k} value={k} className="bg-slate-900">{k}</option>)}
               </select>
             </div>
 
             <div>
               <label className="text-xs font-semibold uppercase text-slate-400 tracking-wider">Rahmengröße</label>
-              <div className="grid grid-cols-3 gap-1 mt-1">
+              <div className="grid grid-cols-3 gap-1.5 mt-2">
                 {groessen.map(g => (
                   <button
                     key={g}
                     onClick={() => setSelectedGroesse(g)}
-                    className={`py-1.5 text-xs font-medium rounded border ${
+                    className={`py-1.5 text-xs font-semibold rounded-lg border transition ${
                       selectedGroesse === g 
-                        ? 'bg-slate-900 text-white border-slate-900' 
-                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                        ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/20' 
+                        : 'bg-slate-800/50 border-slate-700/60 text-slate-300 hover:bg-slate-800'
                     }`}
                   >
                     {g}
@@ -154,52 +158,56 @@ export default function App() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold uppercase text-slate-400 tracking-wider">Max. Preis: {maxPreis} €</label>
+              <div className="flex justify-between items-center text-xs font-semibold text-slate-400">
+                <span className="uppercase tracking-wider">Max. Preis</span>
+                <span className="text-emerald-400 font-bold text-sm">{maxPreis.toLocaleString()} €</span>
+              </div>
               <input 
                 type="range" min="500" max="6000" step="100" value={maxPreis} 
                 onChange={e => setMaxPreis(Number(e.target.value))}
-                className="w-full mt-2 accent-emerald-500"
+                className="w-full mt-2 accent-emerald-400 bg-slate-800"
               />
             </div>
 
             <div>
               <label className="text-xs font-semibold uppercase text-slate-400 tracking-wider">Marke</label>
-              <select value={selectedMarke} onChange={e => setSelectedMarke(e.target.value)} className="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm">
-                {marken.map(m => <option key={m} value={m}>{m}</option>)}
+              <select value={selectedMarke} onChange={e => setSelectedMarke(e.target.value)} className="w-full mt-1.5 p-2.5 bg-slate-800/80 border border-slate-700/60 rounded-xl text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                {marken.map(m => <option key={m} value={m} className="bg-slate-900">{m}</option>)}
               </select>
             </div>
 
             <div>
               <label className="text-xs font-semibold uppercase text-slate-400 tracking-wider">Material</label>
-              <select value={selectedMaterial} onChange={e => setSelectedMaterial(e.target.value)} className="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm">
-                {materialien.map(m => <option key={m} value={m}>{m}</option>)}
+              <select value={selectedMaterial} onChange={e => setSelectedMaterial(e.target.value)} className="w-full mt-1.5 p-2.5 bg-slate-800/80 border border-slate-700/60 rounded-xl text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                {materialien.map(m => <option key={m} value={m} className="bg-slate-900">{m}</option>)}
               </select>
             </div>
 
             <div className="pt-2">
-              <label className="flex items-center space-x-3 cursor-pointer">
+              <label className="flex items-center space-x-3 cursor-pointer group">
                 <input 
                   type="checkbox" checked={onlyInStock} onChange={e => setOnlyInStock(e.target.checked)}
-                  className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300"
+                  className="w-4 h-4 rounded text-emerald-500 focus:ring-emerald-500 bg-slate-800 border-slate-700"
                 />
-                <span className="text-sm font-medium text-slate-700">Sofort auf Lager</span>
+                <span className="text-sm font-medium text-slate-300 group-hover:text-white transition">Nur sofort Verfügbare</span>
               </label>
             </div>
           </div>
         </aside>
 
+        {/* MAIN CONTENT */}
         <main className="flex-1 p-6 space-y-6 overflow-y-auto">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="relative w-full sm:w-96">
-              <Search className="w-5 h-5 absolute left-3 top-2.5 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
               <input 
-                type="text" placeholder="Modell, Schaltung, Zubehör suchen..." value={search}
+                type="text" placeholder="Modell, Schaltung oder Zubehör suchen..." value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-2xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 shadow-inner"
               />
             </div>
-            <div className="text-sm text-slate-500 font-medium">
-              Gezeigte Modelle: <span className="text-slate-900 font-bold">{filteredProducts.length}</span>
+            <div className="text-xs text-slate-400 font-medium bg-slate-900/60 px-3 py-1.5 rounded-full border border-slate-800">
+              Gefunden: <span className="text-emerald-400 font-bold">{filteredProducts.length}</span> Modelle
             </div>
           </div>
 
@@ -207,16 +215,21 @@ export default function App() {
             {filteredProducts.map(p => {
               const isCompared = compareList.some(item => item.id === p.id);
               return (
-                <div key={p.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col">
-                  <div className="relative h-48 bg-slate-100">
-                    <img src={p.bild} alt={p.name} className="w-full h-full object-cover" />
-                    <span className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                <div key={p.id} className="bg-slate-900/90 rounded-3xl border border-slate-800/80 shadow-xl hover:border-slate-700 hover:shadow-2xl hover:shadow-emerald-500/5 transition duration-300 flex flex-col overflow-hidden group">
+                  <div className="relative h-52 bg-slate-950 overflow-hidden">
+                    <img src={p.bild} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80" />
+                    
+                    <span className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-emerald-400 border border-emerald-500/20 text-xs font-semibold px-3 py-1 rounded-full">
                       {p.kategorie}
                     </span>
+                    
                     <button 
                       onClick={() => toggleCompare(p)}
-                      className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md transition ${
-                        isCompared ? 'bg-emerald-500 text-white' : 'bg-white/80 text-slate-700 hover:bg-white'
+                      className={`absolute top-3 right-3 p-2.5 rounded-full backdrop-blur-md transition ${
+                        isCompared 
+                          ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/30' 
+                          : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-700/50'
                       }`}
                     >
                       <ArrowRightLeft className="w-4 h-4" />
@@ -225,37 +238,39 @@ export default function App() {
 
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                     <div>
-                      <div className="flex justify-between items-start">
-                        <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">{p.marke}</span>
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                          p.auf_lager ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs font-extrabold text-emerald-400 uppercase tracking-widest">{p.marke}</span>
+                        <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
+                          p.auf_lager 
+                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
+                            : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                         }`}>
-                          {p.auf_lager ? `Auf Lager (${p.bestand})` : 'Nachbestellung'}
+                          {p.auf_lager ? `Auf Lager (${p.bestand})` : 'Bestellbar'}
                         </span>
                       </div>
-                      <h3 className="font-bold text-slate-800 text-lg leading-snug mt-1">{p.name}</h3>
+                      <h3 className="font-bold text-slate-100 text-lg leading-snug">{p.name}</h3>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 text-xs text-slate-500 bg-slate-50 p-3 rounded-xl">
-                      <div><span className="font-medium text-slate-700">Größe:</span> {p.groesse}</div>
-                      <div><span className="font-medium text-slate-700">Material:</span> {p.material}</div>
-                      <div className="col-span-2 truncate"><span className="font-medium text-slate-700">Schaltung:</span> {p.schaltung}</div>
+                    <div className="grid grid-cols-2 gap-2 text-xs bg-slate-950/60 p-3 rounded-2xl border border-slate-800/50 text-slate-400">
+                      <div><span className="text-slate-500">Größe:</span> <span className="text-slate-200 font-semibold">{p.groesse}</span></div>
+                      <div><span className="text-slate-500">Material:</span> <span className="text-slate-200 font-semibold">{p.material}</span></div>
+                      <div className="col-span-2 truncate"><span className="text-slate-500">Schaltung:</span> <span className="text-slate-200 font-semibold">{p.schaltung}</span></div>
                     </div>
 
-                    <div className="border-t border-slate-100 pt-3 flex justify-between items-end">
+                    <div className="border-t border-slate-800/80 pt-3 flex justify-between items-end">
                       <div>
-                        <div className="text-2xl font-black text-slate-900">{p.preis_eur.toLocaleString()} €</div>
+                        <div className="text-2xl font-black text-white">{p.preis_eur.toLocaleString()} €</div>
                         {!kundenModus && (
-                          <div className="text-xs text-amber-600 font-medium mt-0.5">
+                          <div className="text-xs text-amber-400 font-medium mt-0.5">
                             EK: {p.ek_preis} € | Marge: {p.marge_prozent}%
                           </div>
                         )}
                       </div>
                       <button 
                         onClick={() => setActiveModalProduct(p)}
-                        className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-xl text-xs font-bold transition"
+                        className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2.5 rounded-2xl text-xs font-bold transition shadow-lg shadow-emerald-500/20 flex items-center gap-1"
                       >
-                        Details & Beratung
+                        Details <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
@@ -266,44 +281,93 @@ export default function App() {
         </main>
       </div>
 
+      {/* FLOATING COMPARE BAR */}
+      {compareList.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 px-6 py-3 rounded-full shadow-2xl flex items-center gap-4 z-40">
+          <div className="text-xs text-slate-300 font-medium">
+            <span className="text-emerald-400 font-bold">{compareList.length}</span>/3 im Vergleich
+          </div>
+          <button 
+            onClick={() => setShowCompareModal(true)}
+            className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold px-4 py-2 rounded-full transition shadow-lg shadow-emerald-500/20"
+          >
+            Jetzt Vergleichen
+          </button>
+          <button onClick={() => setCompareList([])} className="text-slate-500 hover:text-slate-300">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {/* DETAIL MODAL */}
       {activeModalProduct && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button 
               onClick={() => setActiveModalProduct(null)}
-              className="absolute top-4 right-4 bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200"
+              className="absolute top-4 right-4 bg-slate-800 p-2 rounded-full text-slate-400 hover:text-white"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="flex gap-6 flex-col md:flex-row">
-              <img src={activeModalProduct.bild} alt="" className="w-full md:w-1/2 h-56 object-cover rounded-2xl" />
+              <img src={activeModalProduct.bild} alt="" className="w-full md:w-1/2 h-56 object-cover rounded-2xl border border-slate-800" />
               <div className="space-y-3">
-                <span className="text-xs font-bold text-emerald-600 uppercase">{activeModalProduct.marke}</span>
-                <h2 className="text-2xl font-bold text-slate-900">{activeModalProduct.name}</h2>
-                <div className="text-3xl font-black text-slate-900">{activeModalProduct.preis_eur.toLocaleString()} €</div>
-                <div className="text-sm text-slate-600">Rahmenform: <span className="font-semibold text-slate-800">{activeModalProduct.rahmenform}</span></div>
-                <div className="text-sm text-slate-600">Farbe: <span className="font-semibold text-slate-800">{activeModalProduct.farbe}</span></div>
+                <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">{activeModalProduct.marke}</span>
+                <h2 className="text-2xl font-bold text-white leading-snug">{activeModalProduct.name}</h2>
+                <div className="text-3xl font-black text-emerald-400">{activeModalProduct.preis_eur.toLocaleString()} €</div>
+                <div className="text-sm text-slate-400">Rahmenform: <span className="font-semibold text-slate-200">{activeModalProduct.rahmenform}</span></div>
+                <div className="text-sm text-slate-400">Farbe: <span className="font-semibold text-slate-200">{activeModalProduct.farbe}</span></div>
               </div>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-2xl space-y-2">
-              <h4 className="font-bold text-sm text-slate-700">Mitgeliefertes Zubehör:</h4>
+            <div className="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-2">
+              <h4 className="font-bold text-xs uppercase text-slate-400 tracking-wider">Mitgeliefertes Zubehör</h4>
               <div className="flex flex-wrap gap-2">
                 {activeModalProduct.zubehoer.length > 0 ? (
                   activeModalProduct.zubehoer.map((z, i) => (
-                    <span key={i} className="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-medium">
+                    <span key={i} className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-3 py-1 rounded-full font-medium">
                       ✓ {z}
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-slate-400">Kein Zubehör enthalten</span>
+                  <span className="text-xs text-slate-500">Kein Zubehör enthalten</span>
                 )}
               </div>
             </div>
           </div>
         </div>
       )}
+
+      {/* COMPARE MODAL */}
+      {showCompareModal && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-4xl w-full p-6 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b border-slate-800 pb-4">
+              <h3 className="text-lg font-bold text-white">Produktvergleich</h3>
+              <button onClick={() => setShowCompareModal(false)} className="text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {compareList.map(item => (
+                <div key={item.id} className="bg-slate-950/60 border border-slate-800 p-4 rounded-2xl space-y-3">
+                  <img src={item.bild} alt="" className="w-full h-32 object-cover rounded-xl" />
+                  <div className="font-bold text-sm text-white">{item.name}</div>
+                  <div className="text-xl font-extrabold text-emerald-400">{item.preis_eur.toLocaleString()} €</div>
+                  <div className="text-xs space-y-1 text-slate-400 border-t border-slate-800 pt-2">
+                    <div><b className="text-slate-200">Größe:</b> {item.groesse}</div>
+                    <div><b className="text-slate-200">Material:</b> {item.material}</div>
+                    <div><b className="text-slate-200">Schaltung:</b> {item.schaltung}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
